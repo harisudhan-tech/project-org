@@ -1,0 +1,122 @@
+from flask import Flask, request, jsonify, session
+from flask_cors import CORS
+import json
+import os
+
+app = Flask(__name__)
+app.secret_key = 'your_secret_key_here'  # Change this for production!
+CORS(app, supports_credentials=True)
+
+DATA_FILE = 'data.json'
+
+# -------------------------
+# Helpers
+# -------------------------
+
+def load_data():
+    if not os.path.exists(DATA_FILE):
+        with open(DATA_FILE, 'w') as f:
+            json.dump({"users": [], "loans": []}, f)
+    with open(DATA_FILE, 'r') as f:
+        return json.load(f)
+
+def save_data(data):
+    with open(DATA_FILE, 'w') as f:
+        json.dump(data, f, indent=2)
+
+def current_user():
+    if 'email' in session:
+        data = load_data()
+        for user in data['users']:
+            if user['email'] == session['email']:
+                return user
+    return None
+
+# -------------------------
+# Routes
+# -------------------------
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    creds = request.json
+    data = load_data()
+    for user in data['users']:
+        if user['email'] == creds['email'] and user['password'] == creds['password']:
+            session['email'] = user['email']
+            return jsonify({ "message": "Login successful", "role": user['role'] })
+    return jsonify({ "message": "Invalid credentials" }), 401
+
+@app.route('/api/logout', methods=['POST'])
+def logout():
+    session.clear()
+    return jsonify({ "message": "Logged out" })
+
+@app.route('/api/loans', methods=['GET'])
+def get_loans():
+    user = current_user()
+    if not user:
+        return jsonify({ "message": "Not logged in" }), 401
+
+    data = load_data()
+    if user['role'] == 'admin':
+        return jsonify(data['loans'])
+    else:
+        user_loans = [loan for loan in data['loans'] if loan['customer_id'] == user['id']]
+        return jsonify(user_loans)
+
+@app.route('/api/loans', methods=['POST'])
+def add_loan():
+    user = current_user()
+    if not user or user['role'] != 'admin':
+        return jsonify({ "message": "Unauthorized" }), 403
+
+    loan = request.json
+    data = load_data()
+    data['loans'].append(loan)
+    save_data(data)
+    return jsonify({ "message": "Loan added" })
+
+@app.route('/api/loans/<loan_id>', methods=['PUT'])
+def update_loan(loan_id):
+    user = current_user()
+    if not user or user['role'] != 'admin':
+        return jsonify({ "message": "Unauthorized" }), 403
+
+    new_loan = request.json
+    data = load_data()
+    for idx, loan in enumerate(data['loans']):
+        if loan['loan_id'] == loan_id:
+            data['loans'][idx] = new_loan
+            save_data(data)
+            return jsonify({ "message": "Loan updated" })
+    return jsonify({ "message": "Loan not found" }), 404
+
+@app.route('/api/loans/<loan_id>', methods=['DELETE'])
+def delete_loan(loan_id):
+    user = current_user()
+    if not user or user['role'] != 'admin':
+        return jsonify({ "message": "Unauthorized" }), 403
+
+    data = load_data()
+    data['loans'] = [loan for loan in data['loans'] if loan['loan_id'] != loan_id]
+    save_data(data)
+    return jsonify({ "message": "Loan deleted" })
+
+# -------------------------
+# Seed default users (optional)
+# -------------------------
+@app.before_first_request
+def seed_data():
+    data = load_data()
+    if not data['users']:
+        data['users'] = [
+            { "id": "admin1", "email": "hari@admin", "password": "admin123", "role": "admin" },
+            { "id": "cust1", "email": "john@customer", "password": "cust123", "role": "customer" }
+        ]
+        save_data(data)
+
+# -------------------------
+# Run Server
+# -------------------------
+if __name__ == '__main__':
+    app.run(debug=True)
