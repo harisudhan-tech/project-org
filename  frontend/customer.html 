@@ -1,0 +1,52 @@
+<!-- frontend/customer.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Customer Dashboard</title>
+</head>
+<body>
+  <h2>Customer - My Loans</h2>
+  <button onclick="logout()">Logout</button>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <th>ID</th><th>Amount</th><th>Term</th><th>Rate</th><th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="loan_table"></tbody>
+  </table>
+
+  <script>
+    async function fetchMyLoans() {
+      const res = await fetch('http://localhost:5000/api/loans', {
+        credentials: 'include'
+      });
+      const loans = await res.json();
+      const table = document.getElementById('loan_table');
+      table.innerHTML = '';
+      loans.forEach(loan => {
+        table.innerHTML += `
+          <tr>
+            <td>${loan.loan_id}</td>
+            <td>${loan.amount}</td>
+            <td>${loan.term_months}</td>
+            <td>${loan.interest_rate}</td>
+            <td>${loan.status}</td>
+          </tr>
+        `;
+      });
+    }
+
+    async function logout() {
+      await fetch('http://localhost:5000/api/logout', {
+        method: 'POST',
+        credentials: 'include'
+      });
+      window.location.href = 'index.html';
+    }
+
+    fetchMyLoans();
+  </script>
+</body>
+</html>
