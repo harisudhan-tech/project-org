@@ -1,0 +1,102 @@
+<!-- frontend/admin.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Dashboard</title>
+</head>
+<body>
+  <h2>Admin - Loan Records</h2>
+  <button onclick="logout()">Logout</button>
+
+  <h3>Add / Edit Loan</h3>
+  <input placeholder="Loan ID" id="loan_id">
+  <input placeholder="Customer ID" id="customer_id">
+  <input placeholder="Amount" id="amount" type="number">
+  <input placeholder="Term (months)" id="term_months" type="number">
+  <input placeholder="Interest Rate" id="interest_rate" type="number">
+  <input placeholder="Status" id="status">
+  <button onclick="addLoan()">Save</button>
+
+  <h3>All Loans</h3>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>ID</th><th>Customer</th><th>Amount</th><th>Term</th><th>Rate</th><th>Status</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="loan_table"></tbody>
+  </table>
+
+  <script>
+    async function fetchLoans() {
+      const res = await fetch('http://localhost:5000/api/loans', { credentials: 'include' });
+      const loans = await res.json();
+      const table = document.getElementById('loan_table');
+      table.innerHTML = '';
+      loans.forEach(loan => {
+        table.innerHTML += `
+          <tr>
+            <td>${loan.loan_id}</td>
+            <td>${loan.customer_id}</td>
+            <td>${loan.amount}</td>
+            <td>${loan.term_months}</td>
+            <td>${loan.interest_rate}</td>
+            <td>${loan.status}</td>
+            <td>
+              <button onclick='editLoan(${JSON.stringify(loan)})'>Edit</button>
+              <button onclick='deleteLoan("${loan.loan_id}")'>Delete</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    async function addLoan() {
+      const loan = {
+        loan_id: document.getElementById('loan_id').value,
+        customer_id: document.getElementById('customer_id').value,
+        amount: parseFloat(document.getElementById('amount').value),
+        term_months: parseInt(document.getElementById('term_months').value),
+        interest_rate: parseFloat(document.getElementById('interest_rate').value),
+        status: document.getElementById('status').value
+      };
+
+      await fetch(`http://localhost:5000/api/loans/${loan.loan_id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(loan)
+      });
+
+      fetchLoans();
+    }
+
+    function editLoan(loan) {
+      document.getElementById('loan_id').value = loan.loan_id;
+      document.getElementById('customer_id').value = loan.customer_id;
+      document.getElementById('amount').value = loan.amount;
+      document.getElementById('term_months').value = loan.term_months;
+      document.getElementById('interest_rate').value = loan.interest_rate;
+      document.getElementById('status').value = loan.status;
+    }
+
+    async function deleteLoan(id) {
+      await fetch(`http://localhost:5000/api/loans/${id}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+      fetchLoans();
+    }
+
+    async function logout() {
+      await fetch('http://localhost:5000/api/logout', {
+        method: 'POST',
+        credentials: 'include'
+      });
+      window.location.href = 'index.html';
+    }
+
+    fetchLoans();
+  </script>
+</body>
+</html>
