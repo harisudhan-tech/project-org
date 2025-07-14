@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head><title>Admin Dashboard</title></head>
+<body>
+  <h2>Admin - Loan Records</h2>
+  <button onclick="logout()">Logout</button>
+
+  <h3>Add / Edit Loan</h3>
+  <input placeholder="Loan ID" id="loan_id">
+  <input placeholder="Customer ID" id="customer_id">
+  <input placeholder="Amount" id="amount" type="number">
+  <input placeholder="Term (months)" id="term_months" type="number">
+  <input placeholder="Interest Rate" id="interest_rate" type="number">
+  <input placeholder="Status" id="status">
+  <button id="addLoanBtn">Save</button>
+
+  <h3>All Loans</h3>
+  <table border="1">
+    <thead>
+      <tr><th>ID</th><th>Customer</th><th>Amount</th><th>Term</th><th>Rate</th><th>Status</th><th>Actions</th></tr>
+    </thead>
+    <tbody id="loan_table"></tbody>
+  </table>
+
+  <script src="admin.js"></script>
+</body>
+</html>

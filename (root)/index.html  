@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login - Loan Management Portal</title>
+</head>
+<body>
+  <h2>Login</h2>
+  <input type="text" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Password">
+  <button id="loginBtn">Login</button>
+
+  <p id="message"></p>
+
+  <script src="index.js"></script>
+</body>
+</html>
