@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <base href="/project-org/">
   <title>Login - Loan Management Portal</title>
 </head>
 <body>
