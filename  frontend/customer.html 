@@ -1,4 +1,3 @@
-<!-- frontend/customer.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,21 +9,19 @@
 
   <table border="1">
     <thead>
-      <tr>
-        <th>ID</th><th>Amount</th><th>Term</th><th>Rate</th><th>Status</th>
-      </tr>
+      <tr><th>ID</th><th>Amount</th><th>Term</th><th>Rate</th><th>Status</th></tr>
     </thead>
     <tbody id="loan_table"></tbody>
   </table>
 
   <script>
-    async function fetchMyLoans() {
-      const res = await fetch('http://localhost:5000/api/loans', {
-        credentials: 'include'
-      });
+    async function fetchLoans() {
+      const email = localStorage.getItem("email");
+      const res = await fetch(`http://localhost:5000/api/loans?email=${email}`);
       const loans = await res.json();
-      const table = document.getElementById('loan_table');
-      table.innerHTML = '';
+
+      const table = document.getElementById("loan_table");
+      table.innerHTML = "";
       loans.forEach(loan => {
         table.innerHTML += `
           <tr>
@@ -38,15 +35,12 @@
       });
     }
 
-    async function logout() {
-      await fetch('http://localhost:5000/api/logout', {
-        method: 'POST',
-        credentials: 'include'
-      });
-      window.location.href = 'index.html';
+    function logout() {
+      localStorage.clear();
+      window.location.href = "index.html";
     }
 
-    fetchMyLoans();
+    fetchLoans();
   </script>
 </body>
 </html>

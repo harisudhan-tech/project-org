@@ -7,17 +7,17 @@ async function fetchCustomerLoans() {
 
   const loans = await res.json();
 
-  const table = document.getElementById("loanTable");
+  const table = document.getElementById("loan_table");
   table.innerHTML = "<tr><th>ID</th><th>Customer ID</th><th>Amount</th><th>Term</th><th>Rate</th></tr>";
 
   loans.forEach(loan => {
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${loan.loan_id}</td>
-      <td>${loan.customer_id}</td>
       <td>${loan.amount}</td>
-      <td>${loan.term}</td>
+      <td>${loan.term_months}</td>
       <td>${loan.interest_rate}</td>
+      <td>${loan.status}</td>
     `;
     table.appendChild(row);
   });
@@ -31,6 +31,5 @@ async function logout() {
   window.location.href = "index.html";
 }
 
-document.getElementById("logoutBtn").addEventListener("click", logout);
 
 window.onload = fetchCustomerLoans;
