@@ -85,7 +85,17 @@ def seed_users():
     if not data['users']:
         data['users'] = [
             {"id": "admin1", "email": "hari@admin", "password": "admin123", "role": "admin"},
-            {"id": "cust1", "email": "john@customer", "password": "cust123", "role": "customer"}
+            {"id": "cust1", "email": "john@customer", "password": "cust123", "role": "customer"},,{
+      "id": "cust2",
+      "email": "hari@customer",
+      "password": "cust123",
+      "role": "customer"
+    },{
+      "id": "cust3",
+      "email": "ragavan@customer",
+      "password": "cust123",
+      "role": "customer"
+    }
         ]
         save_data(data)
 
