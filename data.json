@@ -11,6 +11,16 @@
       "email": "john@customer",
       "password": "cust123",
       "role": "customer"
+    },{
+      "id": "cust2",
+      "email": "hari@customer",
+      "password": "cust123",
+      "role": "customer"
+    },{
+      "id": "cust3",
+      "email": "ragavan@customer",
+      "password": "cust123",
+      "role": "customer"
     }
   ],
   "loans": [
