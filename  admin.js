@@ -1,6 +1,6 @@
 async function fetchLoans() {
   const email = localStorage.getItem("email");
-  const res = await fetch(`http://localhost:5000/api/loans?email=${email}`);
+  const res = await fetch(`https://project-org.onrender.com/api/loans?email=${email}`);
   const loans = await res.json();
 
   const table = document.getElementById("loan_table");
@@ -34,7 +34,7 @@ async function addLoan() {
     email: localStorage.getItem("email")
   };
 
-  const res = await fetch("http://localhost:5000/api/loans", {
+  const res = await fetch("https://project-org.onrender.com/api/loans", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(loan)
@@ -68,7 +68,7 @@ function editLoan(loan) {
 
 async function deleteLoan(loanId) {
   const email = localStorage.getItem("email");
-  const res = await fetch(`http://localhost:5000/api/loans/${loanId}?email=${email}`, {
+  const res = await fetch(`https://project-org.onrender.com/api/loans/${loanId}?email=${email}`, {
     method: "DELETE"
   });
   const data = await res.json();
