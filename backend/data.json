@@ -1,0 +1,36 @@
+{
+  "users": [
+    {
+      "id": "admin1",
+      "email": "hari@admin",
+      "password": "admin123",
+      "role": "admin"
+    },
+    {
+      "id": "cust1",
+      "email": "john@customer",
+      "password": "cust123",
+      "role": "customer"
+    }
+  ],
+  "loans": [
+    {
+      "loan_id": "2",
+      "customer_id": "cust1",
+      "amount": 12,
+      "term_months": 2,
+      "interest_rate": 1,
+      "status": "1",
+      "email": "hari@admin"
+    },
+    {
+      "loan_id": "1",
+      "customer_id": "cust2",
+      "amount": 12,
+      "term_months": 2,
+      "interest_rate": 1,
+      "status": "1",
+      "email": "hari@admin"
+    }
+  ]
+}
