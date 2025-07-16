@@ -12,5 +12,5 @@ Login system with authentication and session handling
   - Search by name or account number
 -  Customer Dashboard:
   - View personal loan data (read-only)
--  Uses `localStorage` for loan data (temporary)
+-  Uses `data.json` for loan data (temporary)
 - Uses `sessionStorage` to store logged-in user sessions
